@@ -1,0 +1,133 @@
+[
+  {
+    "id": "wikidata-ireland-dail-current-members",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "Ireland",
+    "region": "Europe",
+    "limit": 250,
+    "currentPosition": "Teachta Dála",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { ?item p:P39 ?ps . ?ps ps:P39 wd:Q654291 . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-united-states-national-legislators",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "United States",
+    "region": "North America",
+    "limit": 700,
+    "currentPosition": "Member of Congress",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q13218630 wd:Q4416090 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-united-kingdom-members-of-parliament",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "United Kingdom",
+    "region": "Europe",
+    "limit": 700,
+    "currentPosition": "Member of Parliament",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q16707842 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-canada-national-legislators",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "Canada",
+    "region": "North America",
+    "limit": 500,
+    "currentPosition": "Member of Parliament",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q15964890 wd:Q18524027 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-spain-congress-members",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "Spain",
+    "region": "Europe",
+    "limit": 450,
+    "currentPosition": "Member of the Congress of Deputies",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q18171345 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-mexico-national-legislators",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "Mexico",
+    "region": "North America",
+    "limit": 700,
+    "currentPosition": "Member of Congress",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q18534310 wd:Q19971999 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-argentina-national-legislators",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "Argentina",
+    "region": "South America",
+    "limit": 450,
+    "currentPosition": "Member of the National Congress",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q18229570 wd:Q18711738 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-colombia-national-legislators",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "Colombia",
+    "region": "South America",
+    "limit": 350,
+    "currentPosition": "Member of Congress",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q18960607 wd:Q19254253 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "wikidata-australia-national-legislators",
+    "kind": "wikidata-position-list",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "country": "Australia",
+    "region": "Oceania",
+    "limit": 300,
+    "currentPosition": "Member of the Parliament of Australia",
+    "query": "SELECT DISTINCT ?item ?itemLabel ?districtLabel ?start ?image WHERE { VALUES ?position { wd:Q18912794 wd:Q6814428 } ?item p:P39 ?ps . ?ps ps:P39 ?position . FILTER NOT EXISTS { ?ps pq:P582 ?end } OPTIONAL { ?ps pq:P580 ?start } OPTIONAL { ?ps pq:P768 ?district . ?district rdfs:label ?districtLabel . FILTER(LANG(?districtLabel) = \"en\") } OPTIONAL { ?item wdt:P18 ?image . } ?item rdfs:label ?itemLabel . FILTER(LANG(?itemLabel) = \"en\") }",
+    "enabled": true
+  },
+  {
+    "id": "argentina-senate-current-members",
+    "kind": "official-json-record-list",
+    "endpoint": "https://www.senado.gob.ar/micrositios/DatosAbiertos/ExportarListadoSenadores/json",
+    "country": "Argentina",
+    "region": "Argentina",
+    "limit": 100,
+    "currentPosition": "National Senator",
+    "enabled": true
+  },
+  {
+    "id": "argentina-hcdn-current-deputies",
+    "kind": "official-csv-record-list",
+    "endpoint": "https://www.hcdn.gob.ar/system/modules/ar.gob.hcdn.diputados/formatters/generar-lista-diputados.csv",
+    "country": "Argentina",
+    "region": "Argentina",
+    "limit": 400,
+    "currentPosition": "National Deputy",
+    "encoding": "utf-8",
+    "enabled": true
+  },
+  {
+    "id": "argentina-refeglo-local-authorities",
+    "kind": "official-csv-record-list",
+    "endpoint": "https://infra.datos.gob.ar/catalog/otros/dataset/14/distribution/14.1/download/datos-refeglo-25-04-2025.csv",
+    "country": "Argentina",
+    "region": "Argentina",
+    "limit": 2500,
+    "currentPosition": "Local government authority",
+    "encoding": "windows-1252",
+    "enabled": true
+  }
+]

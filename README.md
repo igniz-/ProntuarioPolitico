@@ -1,60 +1,60 @@
 # Prontuario Politico
 
-A source-aware political research desk. Search a public official and receive a cached brief covering their role, tenure, salary, legislative record, allegations, and highlights.
+Una mesa de investigación política orientada a las fuentes. Busca a un funcionario público y recibe un informe en caché sobre su cargo, trayectoria, salario, actividad legislativa, acusaciones y puntos destacados.
 
-## Run locally
+## Ejecución local
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Abre `http://localhost:3000`.
 
-## Azure setup
+## Configuración de Azure
 
-Copy `.env.example` to `.env.local` and add an Azure OpenAI endpoint, API key, and deployment name. The research request runs only on the server. In development, missing credentials use a clearly marked sample record; production fails closed until the provider is configured.
+Copia `.env.example` a `.env.local` y añade un endpoint de Azure OpenAI, una clave API y el nombre del deployment. La solicitud de investigación se ejecuta únicamente en el servidor. En desarrollo, la ausencia de credenciales utiliza un registro de ejemplo claramente identificado; en producción, la aplicación falla de forma segura hasta que el proveedor esté configurado.
 
-Research is cached in SQLite under `data/prontuario.db`. Set `CACHE_TTL_HOURS` in `.env.local` to control how many hours cached research remains valid; it defaults to 24. For production, set `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` to use a hosted libSQL database.
+La investigación se guarda en caché en SQLite dentro de `data/prontuario.db`. Define `CACHE_TTL_HOURS` en `.env.local` para controlar durante cuántas horas el resultado permanece válido; el valor predeterminado es 24. En producción, define `TURSO_DATABASE_URL` y `TURSO_AUTH_TOKEN` para usar una base de datos libSQL alojada.
 
-Research validation limits, confidence thresholds, portrait revalidation, and Azure request settings are centralized in `src/lib/research-config.ts`. These are application settings rather than user-provided request parameters.
+Los límites de validación de la investigación, los umbrales de confianza, la revalidación de retratos y la configuración de las solicitudes a Azure están centralizados en `src/lib/research-config.ts`. Son ajustes de la aplicación, no parámetros proporcionados por las solicitudes de los usuarios.
 
-## Translations
+## Traducciones
 
-User-facing research desk copy lives in `src/lib/i18n/`, with one catalog per language and shared types in `types.ts`. Add a language by creating its catalog, registering it in `src/lib/i18n/index.ts`, and extending the `Language` union. The UI reads translations through `getTranslation()` rather than defining strings inside components.
+Los textos visibles de la mesa de investigación están en `src/lib/i18n/`, con un catálogo por idioma y tipos compartidos en `types.ts`. Para añadir un idioma, crea su catálogo, regístralo en `src/lib/i18n/index.ts` y amplía la unión `Language`. La interfaz obtiene las traducciones mediante `getTranslation()` en lugar de definir textos dentro de los componentes.
 
-## Production checklist
+## Lista de comprobación para producción
 
-- Rotate any Azure key that has been exposed outside the deployment secret manager, then store the replacement only in the host's encrypted environment settings.
-- Use Turso or another persistent libSQL database for multi-instance or serverless hosting; do not rely on the local SQLite file for production durability.
-- Put a platform or edge rate limit in front of `/api/research` and `/api/reports`. The application includes a best-effort per-instance limit, but it is not a substitute for a distributed gateway limit.
-- Report submissions are limited to three per IP per 24 hours, deduplicated by politician and source for 24 hours, and triaged with a bounded Azure request. AI triage may propose structured scalar corrections; administrators approve or reject them before any cached profile is changed. Approving a report without a structured correction reruns the normal research flow with the administrator-approved claim and source as review context.
-- Deploy behind HTTPS and verify the configured security headers, provider secret scope, backups, logs, and report moderation process.
+- Rota cualquier clave de Azure que haya quedado expuesta fuera del gestor de secretos del deployment y guarda la nueva clave únicamente en la configuración cifrada del hosting.
+- Usa Turso u otra base de datos libSQL persistente para hosting multiinstancia o serverless; no dependas del archivo SQLite local para la durabilidad en producción.
+- Coloca un límite de solicitudes de plataforma o edge delante de `/api/research` y `/api/reports`. La aplicación incluye un límite básico por instancia, pero no sustituye a un límite distribuido en el gateway.
+- Los reportes están limitados a tres por IP cada 24 horas, se deduplican por político y fuente durante 24 horas y pasan por un triage acotado en Azure. El triage de IA solo propone correcciones escalares estructuradas; los administradores deben aprobarlas o rechazarlas antes de modificar cualquier perfil en caché.
+- Despliega detrás de HTTPS y verifica las cabeceras de seguridad configuradas, el alcance de los secretos del proveedor, las copias de seguridad, los logs y el proceso de moderación de reportes.
 
-## Admin panel and analytics
+## Panel de administración y analítica
 
-Set `ADMIN_TOKEN` in the deployment secret manager and open `/admin` to sign in. The token is exchanged for a short-lived HttpOnly cookie; it is never stored in the browser or sent in the URL. Set `ADMIN_SESSION_SECRET` to a separate high-entropy value in production to sign the session cookie.
+Define `ADMIN_TOKEN` en el gestor de secretos del deployment y abre `/admin` para iniciar sesión. El token se intercambia por una cookie HttpOnly de corta duración; nunca se guarda en el navegador ni se envía en la URL. En producción, define `ADMIN_SESSION_SECRET` con un valor independiente y de alta entropía para firmar la cookie de sesión.
 
-The panel reports visits, daily unique visitors, average session duration, popular paths, and successful profile-link copies. Analytics stores event timestamps, session IDs, and a daily keyed hash of the request IP; raw IP addresses are not persisted. Set `ANALYTICS_HASH_SECRET` to a separate high-entropy value and configure the database retention policy appropriate for your deployment.
+El panel muestra visitas, visitantes únicos diarios, duración media de las sesiones, rutas más consultadas y copias exitosas de enlaces de perfiles. La analítica guarda marcas de tiempo de eventos, identificadores de sesión y un hash diario derivado de la IP de la solicitud; las direcciones IP sin procesar no se persisten. Define `ANALYTICS_HASH_SECRET` con un valor independiente y de alta entropía, y configura la política de retención de la base de datos según tu deployment.
 
-Rejected reports remain in the database as moderation history but disappear from the pending queue. Approved structured reports apply an allowlisted scalar field such as `position`, `tenure`, or `salary`; approved plain-language reports rerun the research model with the submitted claim and source URL, and the resulting schema-validated profile replaces the relevant cache. Arbitrary JSON patches, source changes, and array edits are not applied automatically.
+Los reportes rechazados permanecen en la base de datos como historial de moderación, pero desaparecen de la cola pendiente. Los reportes aprobados deben contener una corrección estructurada para un campo escalar permitido, como `position`, `tenure` o `salary`; la corrección se aplica al perfil en caché, se actualiza la caché correspondiente y el reporte aprobado se elimina. Los parches JSON arbitrarios, los cambios de fuentes y las ediciones de arrays no se aplican automáticamente.
 
-## Politician registry
+## Registro de funcionarios
 
-Autocomplete reads the lightweight discovery registry from the `politician_registry` table in SQLite/libSQL. Registry records contain identity and directory metadata only, and selecting one still runs the normal source-aware research flow. The JSON seed registry is no longer used.
+El autocompletado lee el registro ligero de descubrimiento desde la tabla `politician_registry` en SQLite/libSQL. Los registros contienen únicamente metadatos de identidad y directorio; al seleccionar uno, se ejecuta el flujo normal de investigación orientado a las fuentes. El registro JSON de seed ya no se utiliza.
 
-Check registry sources and refresh Wikimedia portraits without AI extraction:
+Comprueba las fuentes del registro y actualiza los retratos de Wikimedia sin extracción mediante IA:
 
 ```bash
 npm run registry:check
 npm run registry:refresh
 ```
 
-The refresh command is suitable for a later system cron job. It validates each source URL, refreshes Wikipedia thumbnails when the record uses a Wikipedia source, discovers current legislative members through bounded Wikidata `P39` position queries and official structured directories, and upserts records directly into SQLite/libSQL. The initial country rollout covers Ireland, the United States, the United Kingdom, Canada, Spain, Mexico, Argentina, Colombia, and Australia. These sources are intentionally bounded and should not be treated as completeness claims while coverage is being expanded. The command preserves records whose source is temporarily unavailable.
+El comando de actualización es adecuado para ejecutarse posteriormente mediante un cron del sistema. Valida cada URL de origen, actualiza las miniaturas de Wikipedia cuando el registro utiliza una fuente de Wikipedia, descubre miembros legislativos actuales mediante consultas acotadas de posiciones `P39` en Wikidata y directorios oficiales estructurados, y hace upsert de los registros directamente en SQLite/libSQL. El despliegue inicial por países cubre Irlanda, Estados Unidos, Reino Unido, Canadá, España, México, Argentina, Colombia y Australia. Estas fuentes están deliberadamente acotadas y no deben interpretarse como afirmaciones de cobertura completa mientras se amplía el alcance. El comando conserva los registros cuya fuente no está disponible temporalmente.
 
-Discovery sources are configured in `data/registry-sources.json`. Wikidata sources use bounded `P39` position-list queries, exclude statements with an end date, and add candidates with their Wikidata URL, country, region, position, district, and optional Commons image. Argentina also uses the official Senate JSON export, the official HCDN CSV export, and the ReFeGLo CSV published through Datos Argentina. ReFeGLo supplies local government authorities and is refreshed on an eventual schedule, so those records should be treated as directory leads and verified against the local government's current site. New source types should get an explicit parser in `scripts/refresh-registry.mjs`; avoid adding generic HTML scraping when a structured endpoint is available.
+Las fuentes de descubrimiento se configuran en `data/registry-sources.json`. Las fuentes de Wikidata utilizan consultas acotadas de listas de posiciones `P39`, excluyen declaraciones con fecha de finalización y añaden candidatos con su URL de Wikidata, país, región, cargo, distrito y una imagen opcional de Commons. Argentina también utiliza la exportación JSON oficial del Senado, la exportación CSV oficial de HCDN y el CSV de ReFeGLo publicado a través de Datos Argentina. ReFeGLo proporciona autoridades de gobiernos locales y se actualiza con una periodicidad eventual, por lo que esos registros deben tratarse como pistas de directorio y verificarse en el sitio web vigente del gobierno local. Los nuevos tipos de fuente deben tener un parser explícito en `scripts/refresh-registry.mjs`; evita añadir scraping HTML genérico cuando exista un endpoint estructurado.
 
-For a cron entry, run the command from the project directory, for example:
+Para una entrada de cron, ejecuta el comando desde el directorio del proyecto, por ejemplo:
 
 ```cron
 15 3 * * 1 cd /path/to/ProntuarioPolitico && npm run registry:refresh >> data/registry-refresh.log 2>&1
